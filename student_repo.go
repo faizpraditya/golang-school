@@ -36,8 +36,16 @@ func (sr *StudentRepo) UpdateByNIM(updateCustomerInfo Student) (Student, error) 
 	return updateCustomerInfo, nil
 }
 
-func (sr *StudentRepo) OpenSubjectForExistingStudent(studentWithProduct Student) error {
-	result := sr.conn.Db.Model(&studentWithProduct).Updates(studentWithProduct)
+func (sr *StudentRepo) FindByNIMFull(nim string) (Student, error) {
+	var student Student
+	result := sr.conn.Db.Model(&Student{}).Where("nim = ?", nim).Scan(&student)
+	return student, sr.HandleError(result)
+}
+
+func (sr *StudentRepo) OpenSubjectForExistingStudent(nim string, idmk string) error {
+	dataStudent, _ := sr.FindByNIMFull(nim)
+	studentWithSubject := Student{ID: dataStudent.ID, Subjects: []Subject{{ID: idmk}}}
+	result := sr.conn.Db.Model(&studentWithSubject).Updates(studentWithSubject)
 	return sr.HandleError(result)
 }
 

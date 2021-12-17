@@ -29,7 +29,10 @@ func mainMenuController(menu int, db *DBConn) {
 		return
 	case 2:
 		defer subjectMenu(db)
+		return
 	case 3:
+		defer chooseSubject(db)
+		return
 	case 4:
 	case 5:
 		fmt.Println("Exit from program")
@@ -39,4 +42,17 @@ func mainMenuController(menu int, db *DBConn) {
 		fmt.Println("Wrong input")
 		return
 	}
+}
+
+func chooseSubject(db *DBConn) {
+	fmt.Println("Mahasiswa memilih Mata Kuliah")
+	fmt.Print("Masukkan NIM Mahasiswa  : ")
+	scanner.Scan()
+	nim := scanner.Text()
+	fmt.Print("Masukkan ID Mata Kuliah : ")
+	scanner.Scan()
+	idmk := scanner.Text()
+
+	studentRepo := NewStudentRepo(db)
+	studentRepo.OpenSubjectForExistingStudent(nim, idmk)
 }
