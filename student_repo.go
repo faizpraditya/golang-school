@@ -49,6 +49,12 @@ func (sr *StudentRepo) OpenSubjectForExistingStudent(nim string, idmk string) er
 	return sr.HandleError(result)
 }
 
+func (sr *StudentRepo) StudentSubjectList(nim string) (Student, error) {
+	var student Student
+	result := sr.conn.Db.Preload("Subjects").Where("nim = ?", nim).Find(&student)
+	return student, sr.HandleError(result)
+}
+
 func NewStudentRepo(conn *DBConn) *StudentRepo {
 	return &StudentRepo{BaseRepo{conn: conn}}
 }
