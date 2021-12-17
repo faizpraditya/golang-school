@@ -1,19 +1,11 @@
 package main
 
-import (
-	"fmt"
-)
-
 type StudentRepo struct {
 	BaseRepo
 }
 
 func (sr *StudentRepo) Insert(newStudent Student) (Student, error) {
-	// Cek validasi manual
-	fmt.Println("insert")
 	result := sr.conn.Db.Create(&newStudent)
-	// Cek validasi manual
-	fmt.Println(newStudent.ID)
 	return newStudent, sr.HandleError(result)
 }
 
@@ -37,15 +29,6 @@ func (sr *StudentRepo) DeleteByNIM(student Student) error {
 
 func (sr *StudentRepo) UpdateByNIM(updateCustomerInfo Student) (Student, error) {
 	result := sr.conn.Db.Model(&updateCustomerInfo).Where("nim = ?", updateCustomerInfo.NIM).Updates(updateCustomerInfo)
-	err := sr.HandleError(result)
-	if err != nil {
-		return Student{}, err
-	}
-	return updateCustomerInfo, nil
-}
-
-func (sr *StudentRepo) UpdateFirstName(updateCustomerInfo Student) (Student, error) {
-	result := sr.conn.Db.Model(&updateCustomerInfo).Select("first_name").Updates(updateCustomerInfo)
 	err := sr.HandleError(result)
 	if err != nil {
 		return Student{}, err
